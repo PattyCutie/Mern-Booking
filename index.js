@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser"
 // Routes
 import authRoute from "./routes/auth.js";
 import userRoute from "./routes/users.js";
@@ -14,7 +15,7 @@ dotenv.config();
 // mongoDB innicialize
 const connect = async () => {
   try {
-    await mongoose.connect(process.env.MONGO);
+    await mongoose.connect(process.env.MONGO_SECRET_KEY);
     console.log("Connected to MongoDB !!");
   } catch (error) {
     throw error;
@@ -34,10 +35,11 @@ app.get("/", (req, res) => {
 });
 
 // middlewares
+app.use(cookieParser())
 app.use(express.json());
 
 app.use("/api/auth", authRoute);
-app.use("api/users", userRoute);
+app.use("/api/users", userRoute);
 app.use("/api/hotels", hotelsRoute);
 app.use("/api/rooms", roomsRoute);
 
@@ -52,6 +54,7 @@ app.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
+
 // port
 app.listen(8800, () => {
   connect();

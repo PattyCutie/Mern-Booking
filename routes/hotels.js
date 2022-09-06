@@ -6,18 +6,19 @@ import { createHotel,
   getHotel, 
   getHotels, 
   updatedHotel } from "../controllers/controlHotel.js";
+  import { verifyAdmin } from "../utils/verifyToken.js";
 
 
 const router = express.Router();
 
 //CREATE /POST
-router.post("/", createHotel);
+router.post("/", verifyAdmin, createHotel);
 
 //UPDATE /PUT
-router.put("/:id", updatedHotel)
+router.put("/:id", verifyAdmin, updatedHotel)
 
 //DELETE
-router.delete("/:id", deleteHotel);
+router.delete("/:id", verifyAdmin, deleteHotel);
 
 //GET
 router.get("/:id", getHotel);
