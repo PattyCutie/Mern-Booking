@@ -42,7 +42,7 @@ export const deleteHotel = async (req, res, next) => {
   }
 }
   
-//GET
+//GET by Hotel
 export const getHotel = async ( req, res, next) => {
 
   try {
@@ -54,7 +54,7 @@ export const getHotel = async ( req, res, next) => {
   }
 }
 
-//GET ALL
+//GET ALL by Hotel
 export const getHotels = async ( req, res, next ) => {
   try {
     const hotels = await Hotel.find();
@@ -65,3 +65,17 @@ export const getHotels = async ( req, res, next ) => {
   }
 }
 
+//GET ALL Count by City* 
+//(we can use hotel.find but we will use mongoDB count document instead
+export const countByCity = async ( req, res, next ) => {
+  const cities = req.query.cities.split(",")
+  try {
+    const list = await Promise.all(cities.map(city =>{
+      return Hotel.countDocuments({city: city})
+    }))
+
+    res.status(200).json(list);
+  } catch (err) {
+    next(err);
+  }
+}
